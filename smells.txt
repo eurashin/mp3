@@ -1,0 +1,2 @@
+1) Smell: Duplicated Code (appears twice in the same class)
+   Refactoring: Extract Method (place calls for new method in both places)
