@@ -1,2 +1,5 @@
 1) Smell: Duplicated Code (appears twice in the same class)
    Refactoring: Extract Method (place calls for new method in both places)
+2) Smell: Feature Envy (code should be in another class) 
+   Refactoring: Move Method (method should be moved) 
+3) We can fix this code by adding a loop to repeat these statements.  

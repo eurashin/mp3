@@ -34,6 +34,7 @@ hudson/model/ActionableTest.class
 hudson/model/RunTest$1$1.class
 hudson/model/ListViewTest.class
 hudson/FunctionsTest.class
+jenkins/model/IdTest.class
 hudson/util/CopyOnWriteListTest.class
 hudson/search/SearchTest$1.class
 hudson/model/LoadStatisticsTest$1.class
