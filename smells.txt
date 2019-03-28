@@ -3,3 +3,6 @@
 2) Smell: Feature Envy (code should be in another class) 
    Refactoring: Move Method (method should be moved) 
 3) We can fix this code by adding a loop to repeat these statements.  
+4) The testALLFilter() and testCOMPLETEDFilter() tests in the hudson/model/parameter definition tests 
+   are almost entirely duplicate.  
+   This may be fixed with method extraction. 

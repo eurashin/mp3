@@ -109,10 +109,39 @@ public class RunParameterDefinitionTest {
                      build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("RUN_NUMBER"));
     }
 
+
+    private FreeStyleProject[] initializeProject(RunParameterFilter type) throws Exception {
+        FreeStyleProject project = j.createFreeStyleProject("project");
+        FreeStyleBuild successfulBuild = project.scheduleBuild2(0).get();
+
+        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.UNSTABLE)));
+        FreeStyleBuild unstableBuild = project.scheduleBuild2(0).get();
+
+        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.FAILURE)));
+        FreeStyleBuild failedBuild = project.scheduleBuild2(0).get();
+
+        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.NOT_BUILT)));
+        FreeStyleBuild notBuiltBuild = project.scheduleBuild2(0).get();
+        
+        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.ABORTED)));
+        FreeStyleBuild abortedBuild = project.scheduleBuild2(0).get();
+        
+        FreeStyleProject paramProject = j.createFreeStyleProject("paramProject");
+        
+        ParametersDefinitionProperty pdp = 
+                new ParametersDefinitionProperty(new RunParameterDefinition("RUN", 
+                                                                             project.getName(),
+                                                                             "run description",
+                                                                             type));
+        paramProject.addProperty(pdp);
+    
+        FreeStyleProject[] array = {project, paramProject};
+        return(array);
+    }
     
     @Test
     public void testALLFilter() throws Exception {
-
+        /*
         FreeStyleProject project = j.createFreeStyleProject("project");
         FreeStyleBuild successfulBuild = project.scheduleBuild2(0).get();
 
@@ -135,15 +164,19 @@ public class RunParameterDefinitionTest {
                                                                              "run description",
                                                                              RunParameterFilter.ALL));
         paramProject.addProperty(pdp);
+        */
+        
+        FreeStyleProject[] projectArray = initializeProject(RunParameterFilter.ALL);
+        
 
-        FreeStyleBuild build = paramProject.scheduleBuild2(0).get();
-        assertEquals(Integer.toString(project.getLastBuild().getNumber()),
+        FreeStyleBuild build = projectArray[1].scheduleBuild2(0).get();
+        assertEquals(Integer.toString(projectArray[0].getLastBuild().getNumber()),
                      build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("RUN_NUMBER"));
     }
 
     @Test
     public void testCOMPLETEDFilter() throws Exception {
-
+        /*
         FreeStyleProject project = j.createFreeStyleProject("project");
         FreeStyleBuild successfulBuild = project.scheduleBuild2(0).get();
 
@@ -160,14 +193,20 @@ public class RunParameterDefinitionTest {
         FreeStyleBuild abortedBuild = project.scheduleBuild2(0).get();
 
         FreeStyleProject paramProject = j.createFreeStyleProject("paramProject");
+        
+
+
         ParametersDefinitionProperty pdp = 
                 new ParametersDefinitionProperty(new RunParameterDefinition("RUN", 
                                                                              project.getName(),
                                                                              "run description",
                                                                              RunParameterFilter.COMPLETED));
         paramProject.addProperty(pdp);
+        */
+        FreeStyleProject[] projectArray = initializeProject(RunParameterFilter.COMPLETED);
+        FreeStyleBuild abortedBuild = projectArray[0].scheduleBuild2(0).get();
 
-        FreeStyleBuild build = paramProject.scheduleBuild2(0).get();
+        FreeStyleBuild build = projectArray[1].scheduleBuild2(0).get();
         assertEquals(Integer.toString(abortedBuild.getNumber()),
                      build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("RUN_NUMBER"));
     }
